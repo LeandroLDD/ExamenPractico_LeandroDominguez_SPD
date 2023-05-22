@@ -2,7 +2,7 @@
 ![MontacargaArduino](https://github.com/LeandroLDD/ExamenPractico_LeandroDominguez_SPD/assets/104798622/5c8e7a29-1d5b-4874-96c2-0b73b528d956)
 
 ## Descripcion
-Sistema de montacarga que implementa un algoritmo que permite recibir ordener para controlarlo hasta en 9 pisos. Las ordenes que recibe son:
+Sistema de montacarga que implementa un algoritmo que permite recibir ordenes para controlarlo hasta en 9 pisos. Las ordenes que recibe son:
 - Bajar
 - Subir
 - Detener
@@ -32,17 +32,20 @@ Indica en que estado se encuentra el montacarga, SUBIR(1), BAJAR(-1) o DETENER(0
 ## Funciones
 
 Enciende un vector de tipo int que represente un numero en el 7 segmentos y retorna un valor booleano, exito(true) o error(false).
-Recibe como parametros, **int num[]** el vector de numeros y **bool estado** que indica si debe encender(true) o apagar(false) el numero que va a representar en el display.
+Recibe como parametros, **int num[]** el vector de numeros que se prenderan/apagaran y **bool estado** que indica si debe encender(true) o apagar(false) el vector **num[]**.
 -     bool digitalWriteSegmento(int num[], bool estado);
 
+<a id="prenderLed"/>
 Enciende un pin.
 Recibe como parametro **int led** el pin a encender.
 -     void prenderLed(int led);
 
+<a id="apagarLed"/>
 Apaga un pin.
 Recibe como parametro **int led** el pin a apagar.
 -     void apagarLed(int led);
 
+<a id="prenderLedBooleano"/>
 Prende y apaga un pin segun un valor booleano.
 Recibe como parametros, **bool valor** valor boleano que determina el pin a encender y a apagar, **int ledTrue** pin a encender, **int ledFalse** pin a apagar.
 -     void prenderLedBooleano(bool valor, int ledTrue, int ledFalse);
@@ -50,13 +53,18 @@ Recibe como parametros, **bool valor** valor boleano que determina el pin a ence
 ## Funcion loop()
 Contiene la logical principal del programa.
 
-Lo primero que hace el algoritmo mientras el sistema del montacarga esté activo o apagado es enviar un mensaje por Serial indicando el piso actual en el se encuentra.
+DIAGRAMA ESQUEMATICO
+[ExamenPractico Diagrama esquematico Leandro Dominguez 1B SPD.pdf](https://github.com/LeandroLDD/ExamenPractico_LeandroDominguez_SPD/files/11535884/ExamenPractico.Diagrama.esquematico.Leandro.Dominguez.1B.SPD.pdf)
+
+![ComponentesMontacarga](https://github.com/LeandroLDD/ExamenPractico_LeandroDominguez_SPD/assets/104798622/32944740-eeb6-400f-beb8-6a228250f9c1)
+
+Lo primero que hace el algoritmo mientras el sistema del montacarga esté activo o apagado es enviar un mensaje por Serial indicando el piso actual en el que se encuentra.
 
       Serial.println("\nPiso actual");
       Serial.println(pisoMontacarga);
 
-Antes de entrar a la deteccion de botones se enciende un led con la función **prenderLed()** que indicara que el montacarga no está en movimiento y puede presionar algun boton controlador.
-Para poder detectar la presión de los botones controladores del montacarga se uso un bucle, que se repetira hasta 15 veces con un tiempo de espera total de 1,5 segundos para dar tiempo a presionar alguno mientras el montacarga está subiendo o bajando. Cada condicional detecta un boton controlador, para luego establecer [estadoMontacarga](#estadoMontacarga) con su correspondiente valor.
+Antes de entrar a la deteccion de botones se enciende un led con la función [prenderLed()](#prenderLed) que indicara que el montacarga no está en movimiento y puede presionar algun boton controlador.
+Para poder detectar la presión de los botones controladores del montacarga se uso un bucle, que se repetira hasta 15 veces con un tiempo de espera total de 1,5 segundos para dar tiempo a presionar alguno mientras el montacarga esté subiendo o bajando. Cada condicional detecta un boton controlador, para luego establecer [estadoMontacarga](#estadoMontacarga) con su correspondiente valor y encender/apagar el montacarga.
 
         prenderLed(AVISODISPONIBLE);
         for(int i = 0; i < 15; i++){
@@ -76,3 +84,16 @@ Para poder detectar la presión de los botones controladores del montacarga se u
           }
         }
 
+
+Cuando finaliza la detección de los botones se llama la función [prenderLedBooleano()](#prenderLedBooleano) para encender uno de los dos leds de aviso (Rojo o verde) para indicar si está el montacarga detenido o en movimiento.
+Con un condicional verifico si el montacarga se activó, para luego llamar a la función [apagarLed()](#apagarLed) y apagar el led de aviso de disponiblidad del disyplay e inhabilitar la detección de botones por 1,5 segundos para que el montacarga realice su movimiento, por lo que en total el elevador tarda 3 segundos en moverse de un piso a otro.
+Finalmente se apaga el numero que se representa en el display, se modifica el valor del nuevo piso con la variable [estadoMontacarga](#estadoMontacarga) y prende nuevamente el display con el nuevo piso actual a representar.
+
+      prenderLedBooleano(sisMontacarga,LEDVERDE,LEDROJO);
+        if(sisMontacarga){
+          apagarLed(AVISODISPONIBLE);
+          delay(1500);
+        }
+      digitalWriteSegmento(numeroDisplay[pisoMontacarga],LOW);
+      pisoMontacarga += estadoMontacarga;
+      digitalWriteSegmento(numeroDisplay[pisoMontacarga],HIGH);
