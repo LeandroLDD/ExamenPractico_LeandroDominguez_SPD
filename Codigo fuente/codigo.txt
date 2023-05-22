@@ -1,0 +1,127 @@
+#define A 12
+#define B 13
+#define F 11
+#define G 10
+#define E 9
+#define D 8
+#define C 7
+#define AVISODISPONIBLE 4
+#define LEDROJO 6
+#define LEDVERDE 5
+#define BTNSUBIR A0
+#define BTNBAJAR A1
+#define BTNDETENER A2
+#define SUBIR 1
+#define BAJAR -1
+#define DETENER 0
+#define PISOMAX 9
+#define PISOMIN 0
+
+bool digitalWriteSegmento(int num[], bool estado);
+void prenderLed(int led);
+void apagarLed(int led);
+void prenderLedBooleano(bool valor, int ledTrue, int ledFalse);
+
+int cero[8] = {A,B,C,D,E,F,-1};
+int uno[8] = {B,C,-1};
+int dos[8] = {B,A,G,E,D,-1};
+int tres[8] = {A,B,G,C,D,-1};
+int cuatro[8] = {F,G,B,C,-1};
+int cinco[8] = {A,F,G,C,D,-1};
+int seis[8] = {A,F,G,C,D,E,-1};
+int siete[8] = {A,B,C,-1};
+int ocho[8] = {A,B,C,D,E,F,G,-1};
+int nueve[8] = {A,B,C,G,F,-1};
+int* numeroDisplay[] = {cero,uno,dos,tres,cuatro,cinco,seis,siete,ocho,nueve};
+bool sisMontacarga;
+int estadoMontacarga;
+int pisoMontacarga;
+
+void setup()
+{
+  pinMode(13, OUTPUT);
+  pinMode(12, OUTPUT);
+  pinMode(11, OUTPUT);
+  pinMode(10, OUTPUT);
+  pinMode(9, OUTPUT);
+  pinMode(8, OUTPUT);
+  pinMode(7, OUTPUT);
+  pinMode(6, OUTPUT);
+  
+  pinMode(LEDVERDE,OUTPUT);
+  pinMode(LEDROJO,OUTPUT);
+  
+  pinMode(BTNSUBIR,INPUT_PULLUP);
+  pinMode(BTNBAJAR,INPUT_PULLUP);
+  pinMode(BTNDETENER,INPUT_PULLUP);
+  
+  sisMontacarga = false;
+  estadoMontacarga = DETENER;
+  pisoMontacarga = PISOMIN;
+  
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  Serial.println("\nPiso actual");
+  Serial.println(pisoMontacarga);
+  
+  prenderLed(AVISODISPONIBLE);
+  for(int i = 0; i < 15; i++){
+    delay(100);
+
+    if(!digitalRead(BTNSUBIR) && pisoMontacarga < PISOMAX){
+      estadoMontacarga = SUBIR;
+      sisMontacarga = true;
+    }
+    if(!digitalRead(BTNBAJAR) && pisoMontacarga > PISOMIN){
+      estadoMontacarga = BAJAR;
+      sisMontacarga = true;
+    }
+    if(!digitalRead(BTNDETENER) || (estadoMontacarga == BAJAR && pisoMontacarga == PISOMIN) || (estadoMontacarga == SUBIR && pisoMontacarga == PISOMAX)){
+      estadoMontacarga = DETENER;
+      sisMontacarga = false;
+    }
+  }
+  
+  prenderLedBooleano(sisMontacarga,LEDVERDE,LEDROJO);
+  if(sisMontacarga){
+    apagarLed(AVISODISPONIBLE);
+    delay(1500);
+  }
+  digitalWriteSegmento(numeroDisplay[pisoMontacarga],LOW);
+  pisoMontacarga += estadoMontacarga;
+  digitalWriteSegmento(numeroDisplay[pisoMontacarga],HIGH);
+}
+
+bool digitalWriteSegmento(int num[], bool estado){
+  bool ok;
+  ok = false;
+  if(num != nullptr){
+    
+    ok = true;
+    for(int i = 0 ; num[i] != -1; i++){
+    	digitalWrite(num[i], estado);
+  	}
+  }
+  return ok;
+}
+
+void prenderLed(int led){
+  digitalWrite(led,HIGH);
+}
+void apagarLed(int led){
+    digitalWrite(led,LOW);
+}
+
+void prenderLedBooleano(bool valor, int ledTrue, int ledFalse){
+  if(valor){
+    apagarLed(ledFalse);
+    prenderLed(ledTrue);
+  }
+  else{
+    apagarLed(ledTrue);
+    prenderLed(ledFalse);
+  }
+}
