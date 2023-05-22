@@ -35,17 +35,17 @@ Enciende un vector de tipo int que represente un numero en el 7 segmentos y reto
 Recibe como parametros, **int num[]** el vector de numeros que se prenderan/apagaran y **bool estado** que indica si debe encender(true) o apagar(false) el vector **num[]**.
 -     bool digitalWriteSegmento(int num[], bool estado);
 
-<a id="prenderLed"/>
+<a id="prenderLed"></a>
 Enciende un pin.
 Recibe como parametro **int led** el pin a encender.
 -     void prenderLed(int led);
 
-<a id="apagarLed"/>
+<a id="apagarLed"></a>
 Apaga un pin.
 Recibe como parametro **int led** el pin a apagar.
 -     void apagarLed(int led);
 
-<a id="prenderLedBooleano"/>
+<a id="prenderLedBooleano"></a>
 Prende y apaga un pin segun un valor booleano.
 Recibe como parametros, **bool valor** valor boleano que determina el pin a encender y a apagar, **int ledTrue** pin a encender, **int ledFalse** pin a apagar.
 -     void prenderLedBooleano(bool valor, int ledTrue, int ledFalse);
@@ -54,7 +54,7 @@ Recibe como parametros, **bool valor** valor boleano que determina el pin a ence
 Contiene la logical principal del programa.
 
 DIAGRAMA ESQUEMATICO
-[ExamenPractico Diagrama esquematico Leandro Dominguez 1B SPD.pdf](https://github.com/LeandroLDD/ExamenPractico_LeandroDominguez_SPD/files/11535884/ExamenPractico.Diagrama.esquematico.Leandro.Dominguez.1B.SPD.pdf)
+![ExamenPractico_Diagramaesquematico_Leandro Dominguez](https://github.com/LeandroLDD/ExamenPractico_LeandroDominguez_SPD/assets/104798622/e4b5bd06-d012-4952-9ba4-9f6d1b3afdb0)
 
 ![ComponentesMontacarga](https://github.com/LeandroLDD/ExamenPractico_LeandroDominguez_SPD/assets/104798622/32944740-eeb6-400f-beb8-6a228250f9c1)
 
