@@ -25,7 +25,8 @@ Vectores que representan un numero en el 7 segmentos. Almacenan los pines del 7 
 Arreglo de punteros para poder manipular los numeros que se encenderan en el 7 segmentos. Almacena todos los vectores que representan un numero en el Display.
 -     int* numeroDisplay[] = {cero,uno,dos,tres,cuatro,cinco,seis,siete,ocho,nueve};
 
-Indica en que estado se encuentra el montacarga, SUBIR, BAJAR o DETENER.
+<a id="estadoMontacarga"></a>
+Indica en que estado se encuentra el montacarga, SUBIR(1), BAJAR(-1) o DETENER(0).
 -     int estadoMontacarga;
 
 ## Funciones
@@ -47,8 +48,31 @@ Recibe como parametros, **bool valor** valor boleano que determina el pin a ence
 -     void prenderLedBooleano(bool valor, int ledTrue, int ledFalse);
 
 ## Funcion loop()
-Contiene la logical principal del programa
+Contiene la logical principal del programa.
 
-Mientras el sistema del montacarga este activado o pagado se enviara un mensaje por Serial indicando el piso actual en el se encuentra.
-            Serial.println("\nPiso actual");
-            Serial.println(pisoMontacarga);
+Lo primero que hace el algoritmo mientras el sistema del montacarga esté activo o apagado es enviar un mensaje por Serial indicando el piso actual en el se encuentra.
+
+      Serial.println("\nPiso actual");
+      Serial.println(pisoMontacarga);
+
+Antes de entrar a la deteccion de botones se enciende un led con la función **prenderLed()** que indicara que el montacarga no está en movimiento y puede presionar algun boton controlador.
+Para poder detectar la presión de los botones controladores del montacarga se uso un bucle, que se repetira hasta 15 veces con un tiempo de espera total de 1,5 segundos para dar tiempo a presionar alguno mientras el montacarga está subiendo o bajando. Cada condicional detecta un boton controlador, para luego establecer [estadoMontacarga](#estadoMontacarga) con su correspondiente valor.
+
+        prenderLed(AVISODISPONIBLE);
+        for(int i = 0; i < 15; i++){
+          delay(100);
+
+          if(!digitalRead(BTNSUBIR) && pisoMontacarga < PISOMAX){
+            estadoMontacarga = SUBIR;
+            sisMontacarga = true;
+          }
+          if(!digitalRead(BTNBAJAR) && pisoMontacarga > PISOMIN){
+            estadoMontacarga = BAJAR;
+            sisMontacarga = true;
+          }
+          if(!digitalRead(BTNDETENER) || (estadoMontacarga == BAJAR && pisoMontacarga == PISOMIN) || (estadoMontacarga == SUBIR && pisoMontacarga == PISOMAX)){
+            estadoMontacarga = DETENER;
+            sisMontacarga = false;
+          }
+        }
+
