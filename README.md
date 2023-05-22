@@ -7,7 +7,7 @@ Sistema de montacarga que implementa un algoritmo que permite recibir ordener pa
 - Subir
 - Detener
 
-El algoritmo muestra en un Display 7 segmentos el piso en el que se encuentra el montacarga, pudiendo controlarlo con tres pulsadores desde cualquiera de los pisos y avisa con dos leds si el sistema está apago o encendido.
+El algoritmo muestra en un Display 7 segmentos el piso en el que se encuentra el montacarga, pudiendo controlarlo con tres pulsadores desde cualquiera de los pisos mientras el aviso de disponibilidad para presionar este encendido y avisa con dos leds si el sistema del montacarga se encuentra encendido o apagado.
 
 ## Variables importantes
 Vectores que representan un numero en el 7 segmentos. Almacenan los pines del 7 segmentos que se encenderan finalizados con un -1 como limitador.
@@ -45,3 +45,10 @@ Recibe como parametro **int led** el pin a apagar.
 Prende y apaga un pin segun un valor booleano.
 Recibe como parametros, **bool valor** valor boleano que determina el pin a encender y a apagar, **int ledTrue** pin a encender, **int ledFalse** pin a apagar.
 -     void prenderLedBooleano(bool valor, int ledTrue, int ledFalse);
+
+## Funcion loop()
+Contiene la logical principal del programa
+
+Mientras el sistema del montacarga este activado o pagado se enviara un mensaje por Serial indicando el piso actual en el se encuentra.
+            Serial.println("\nPiso actual");
+            Serial.println(pisoMontacarga);
