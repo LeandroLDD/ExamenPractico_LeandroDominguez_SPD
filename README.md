@@ -9,6 +9,9 @@ Sistema de montacarga que implementa un algoritmo que permite recibir ordenes pa
 
 El algoritmo muestra en un Display 7 segmentos el piso en el que se encuentra el montacarga, pudiendo controlarlo con tres pulsadores desde cualquiera de los pisos mientras el aviso de disponibilidad para presionar este encendido y avisa con dos leds si el sistema del montacarga se encuentra encendido o apagado.
 
+## Diagrama esquematico
+![ExamenPractico_Diagramaesquematico_Leandro Dominguez](https://github.com/LeandroLDD/ExamenPractico_LeandroDominguez_SPD/assets/104798622/e4b5bd06-d012-4952-9ba4-9f6d1b3afdb0)
+
 ## Variables importantes
 Vectores que representan un numero en el 7 segmentos. Almacenan los pines del 7 segmentos que se encenderan finalizados con un -1 como limitador.
 -     int cero[8] = {A,B,C,D,E,F,-1};
@@ -52,9 +55,6 @@ Recibe como parametros, **bool valor** valor boleano que determina el pin a ence
 
 ## Funcion loop()
 Contiene la logical principal del programa.
-
-DIAGRAMA ESQUEMATICO
-![ExamenPractico_Diagramaesquematico_Leandro Dominguez](https://github.com/LeandroLDD/ExamenPractico_LeandroDominguez_SPD/assets/104798622/e4b5bd06-d012-4952-9ba4-9f6d1b3afdb0)
 
 ![ComponentesMontacarga](https://github.com/LeandroLDD/ExamenPractico_LeandroDominguez_SPD/assets/104798622/32944740-eeb6-400f-beb8-6a228250f9c1)
 
